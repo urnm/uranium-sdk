@@ -1,0 +1,26 @@
+[install]
+# Configure dependency installation
+cache = true
+
+[install.scopes]
+# Scope configurations for private registries if needed
+
+[run]
+# Runtime configuration
+silent = false
+
+[test]
+# Test configuration
+coverage = true
+coverageDir = "coverage"
+coverageReporter = ["text"]
+coverageSkipTestFiles = true
+
+# Exclude compiled files and other non-source files from coverage
+coveragePathIgnorePatterns = [
+  "**/dist/**",
+  "**/node_modules/**",
+  "**/*.config.js",
+  "**/*.config.ts",
+  "**/coverage/**"
+]

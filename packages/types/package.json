@@ -1,0 +1,56 @@
+{
+  "name": "@uranium/types",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TypeScript type definitions for Uranium SDK",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bun run clean && bun run build:types && bun run build:js",
+    "build:types": "./node_modules/.bin/tsc --emitDeclarationOnly",
+    "build:js": "bun run build.ts",
+    "dev": "bun --watch ./src/index.ts",
+    "lint": "biome check . --diagnostic-level=error",
+    "lint:fix": "biome check . --write --diagnostic-level=error",
+    "format": "biome format --write .",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "prepublishOnly": "bun run lint && bun run build && bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@uranium/configs": "workspace:*",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "uranium",
+    "types",
+    "typescript",
+    "definitions"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urnm/uranium-sdk.git",
+    "directory": "packages/types"
+  },
+  "bugs": {
+    "url": "https://github.com/urnm/uranium-sdk/issues"
+  },
+  "homepage": "https://github.com/urnm/uranium-sdk#readme",
+  "author": "Uranium",
+  "license": "Apache-2.0"
+}
