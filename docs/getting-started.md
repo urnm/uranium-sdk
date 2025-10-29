@@ -321,8 +321,9 @@ Now that you understand the basics, explore these guides:
 
 ## Additional Resources
 
-- **API Portal:** [https://portal.uranium.pro](https://portal.urnm.pro)
+- **Portal:** [https://portal.uranium.pro](https://portal.urnm.pro)
 - **API Keys:** [https://portal.uranium.pro/dashboard/profile/api-keys](https://portal.urnm.pro/dashboard/profile/api-keys)
+- **Full Documentation:** [https://docs.uranium.pro](https://docs.uranium.pro)
 - **Support:** Contact support through the portal
 
 ## Common Issues

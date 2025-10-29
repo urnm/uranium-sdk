@@ -448,9 +448,10 @@ limitations under the License.
 
 ## 🔗 Resources
 
-- **API Portal:** https://portal.uranium.pro
+- **Portal:** https://portal.uranium.pro
 - **API Keys:** https://portal.uranium.pro/dashboard/profile/api-keys
 - **Base URL:** https://gw.urnm.pro
+- **Full Documentation:** [https://docs.uranium.pro](https://docs.uranium.pro
 
 ## 💬 Support
 
