@@ -4,6 +4,8 @@ import type {
   AssetEntity,
   CompleteUploadRequestDto,
   CompleteUploadResponseDto,
+  ExtractFrameSyncRequestDto,
+  ExtractFrameSyncResponseDto,
   FindUserAssetsRequestDto,
   FindUserAssetsResponseDto,
   PrepareNewFileRequestDto,
@@ -14,6 +16,7 @@ import type {
 } from "../types/api-types"
 import {
   completeUploadSchema,
+  extractFrameSyncSchema,
   prepareNewFileSchema,
   startMintingSchema,
 } from "../validation/schemas"
@@ -186,6 +189,52 @@ export const assetsRouter = (client: AxiosInstance) => ({
     }
 
     return response.data.data
+  },
+
+  /**
+   * Extract a frame from a video at a specific time position (synchronous)
+   * @param params - Extraction parameters (fileId, timeInSeconds)
+   * @returns Extracted frame as base64 data with dimensions
+   * @throws {ValidationError} If extraction parameters are invalid
+   * @throws {NetworkError} If network request fails or extraction fails
+   *
+   * @example
+   * ```typescript
+   * const frame = await sdk.assets.extractFrameSync({
+   *   fileId: "video-file-id",
+   *   timeInSeconds: 1.5,
+   * });
+   *
+   * // Use the base64 data directly
+   * const imageDataUrl = `data:${frame.mimeType};base64,${frame.base64Data}`;
+   * ```
+   */
+  extractFrameSync: async (
+    params: ExtractFrameSyncRequestDto,
+  ): Promise<ExtractFrameSyncResponseDto> => {
+    // Validate input before sending request
+    const validated = validateSchema(
+      extractFrameSyncSchema,
+      params,
+      "Invalid frame extraction parameters",
+    )
+
+    const response = await client.post<ExtractFrameSyncResponseDto>(
+      "/assets/extract-frame-sync",
+      validated,
+    )
+
+    if (response.data.status === "error" || !response.data.base64Data) {
+      throw new NetworkError(
+        response.data.errorCode ?? "Failed to extract frame",
+        response.data.errorCode ?? "EXTRACTION_FAILED",
+        false,
+        undefined,
+        { status: response.status, data: response.data },
+      )
+    }
+
+    return response.data
   },
 })
 

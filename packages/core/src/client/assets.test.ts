@@ -8,6 +8,7 @@ import {
 import type {
   AssetEntity,
   CompleteUploadResponseDto,
+  ExtractFrameSyncResponseDto,
   FindUserAssetsResponseDto,
   PrepareNewFileResponseDto,
   StartMintingResponseDto,
@@ -722,6 +723,210 @@ describe("Assets Router", () => {
 
       expect(mockClient.post).toHaveBeenCalled()
       expect(result.status).toBe("MEDIA_UPLOADING")
+    })
+  })
+
+  describe("extractFrameSync", () => {
+    test("should successfully extract frame from video", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "OK",
+        base64Data: "UklGRvL8AABXRUJQVlA4IOb8AAA...",
+        mimeType: "image/webp",
+        width: 1080,
+        height: 2340,
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "file123",
+        timeInSeconds: 1.5,
+      }
+
+      const result = await router.extractFrameSync(params)
+
+      expect(mockClient.post).toHaveBeenCalledWith(
+        "/assets/extract-frame-sync",
+        params,
+      )
+      expect(result.status).toBe("OK")
+      expect(result.base64Data).toBe("UklGRvL8AABXRUJQVlA4IOb8AAA...")
+      expect(result.mimeType).toBe("image/webp")
+      expect(result.width).toBe(1080)
+      expect(result.height).toBe(2340)
+    })
+
+    test("should successfully extract frame at time 0", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "OK",
+        base64Data: "base64data...",
+        mimeType: "image/webp",
+        width: 1920,
+        height: 1080,
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "video-file-id",
+        timeInSeconds: 0,
+      }
+
+      const result = await router.extractFrameSync(params)
+
+      expect(mockClient.post).toHaveBeenCalledWith(
+        "/assets/extract-frame-sync",
+        params,
+      )
+      expect(result.status).toBe("OK")
+    })
+
+    test("should throw NetworkError when file is not found", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "error",
+        errorCode: "FILE_NOT_FOUND",
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse, status: 200 }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "nonexistent-file",
+        timeInSeconds: 1.5,
+      }
+
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        NetworkError,
+      )
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        "FILE_NOT_FOUND",
+      )
+    })
+
+    test("should throw NetworkError when main file is not found", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "error",
+        errorCode: "MAIN_FILE_NOT_FOUND",
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse, status: 200 }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "file123",
+        timeInSeconds: 1.5,
+      }
+
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        NetworkError,
+      )
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        "MAIN_FILE_NOT_FOUND",
+      )
+    })
+
+    test("should throw NetworkError when ffmpeg extraction fails", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "error",
+        errorCode: "FFMPEG_EXTRACTION_FAILED",
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse, status: 200 }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "file123",
+        timeInSeconds: 999, // Time exceeds video duration
+      }
+
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        NetworkError,
+      )
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        "FFMPEG_EXTRACTION_FAILED",
+      )
+    })
+
+    test("should throw ValidationError when fileId is empty", async () => {
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.reject(new Error("Should not be called")),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "",
+        timeInSeconds: 1.5,
+      }
+
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        ValidationError,
+      )
+      expect(mockClient.post).not.toHaveBeenCalled()
+    })
+
+    test("should throw ValidationError when timeInSeconds is negative", async () => {
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.reject(new Error("Should not be called")),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "file123",
+        timeInSeconds: -1,
+      }
+
+      await expect(router.extractFrameSync(params)).rejects.toThrow(
+        ValidationError,
+      )
+      expect(mockClient.post).not.toHaveBeenCalled()
+    })
+
+    test("should accept decimal timeInSeconds values", async () => {
+      const mockResponse: ExtractFrameSyncResponseDto = {
+        status: "OK",
+        base64Data: "base64...",
+        mimeType: "image/webp",
+        width: 1080,
+        height: 1920,
+      }
+
+      const mockClient = createMockAxiosClient({
+        post: () => Promise.resolve({ data: mockResponse }),
+      })
+
+      const router = assetsRouter(mockClient)
+
+      const params = {
+        fileId: "file123",
+        timeInSeconds: 2.567, // Precise time
+      }
+
+      const result = await router.extractFrameSync(params)
+
+      expect(mockClient.post).toHaveBeenCalledWith(
+        "/assets/extract-frame-sync",
+        params,
+      )
+      expect(result.status).toBe("OK")
     })
   })
 })

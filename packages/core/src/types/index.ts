@@ -85,6 +85,9 @@ export type {
   // Contracts API
   CreateUserContractRequestDto,
   CreateUserContractResponseDto,
+  // Frame Extraction API
+  ExtractFrameSyncRequestDto,
+  ExtractFrameSyncResponseDto,
   FindUserAssetsMetadata,
   // Assets API
   FindUserAssetsRequestDto,

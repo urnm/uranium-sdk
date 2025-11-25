@@ -313,3 +313,31 @@ export interface StartMintingResponseDto extends BaseApiResponse {
   /** Minting data if successful */
   data?: StartMintingResponseDataDto | null
 }
+
+// ============================================================================
+// Frame Extraction API Types
+// ============================================================================
+
+/**
+ * Request to extract a frame from a video at a specific time
+ */
+export interface ExtractFrameSyncRequestDto {
+  /** File ID of the video to extract frame from */
+  fileId: string
+  /** Time position in seconds to extract the frame at */
+  timeInSeconds: number
+}
+
+/**
+ * Response for synchronous frame extraction
+ */
+export interface ExtractFrameSyncResponseDto extends BaseApiResponse {
+  /** Base64-encoded frame data (only present on success) */
+  base64Data?: string | null
+  /** MIME type of the extracted frame (typically "image/webp") */
+  mimeType?: string | null
+  /** Width of the extracted frame in pixels */
+  width?: number | null
+  /** Height of the extracted frame in pixels */
+  height?: number | null
+}

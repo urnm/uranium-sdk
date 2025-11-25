@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-11-25
+
 ### Added
+- **@uranium/sdk** - New `extractFrameSync()` method for extracting frames from video files
+  - Synchronous frame extraction at specific time positions
+  - Returns base64-encoded image data with dimensions
+  - Zod validation for extraction parameters
 - Initial public release of Uranium SDK
 - **@uranium/sdk** - Core SDK package
   - Complete API client with account, contracts, and assets routers
@@ -44,6 +50,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Improved type exports from @uranium/types to fix build issues
-- Updated test suite (926 passing tests)
+- Updated test suite (938 passing tests)
 
-<!-- Version comparison links will be added when first version is released -->
+[0.2.0]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.0

@@ -14,6 +14,7 @@ import {
   editionsSchema,
   ercTypeSchema,
   eTagSchema,
+  extractFrameSyncSchema,
   fileIdSchema,
   fileSizeSchema,
   fileSourceSchema,
@@ -21,6 +22,7 @@ import {
   mimeTypeSchema,
   prepareNewFileSchema,
   startMintingSchema,
+  timeInSecondsSchema,
   uploadMetadataSchema,
 } from "./schemas"
 
@@ -787,6 +789,84 @@ describe("Validation Schemas", () => {
         metadata: {},
       }
       expect(() => startMintingSchema.parse(invalidMetadata)).toThrow(ZodError)
+    })
+  })
+
+  describe("timeInSecondsSchema", () => {
+    test("should accept valid time values", () => {
+      expect(() => timeInSecondsSchema.parse(0)).not.toThrow() // zero is valid
+      expect(() => timeInSecondsSchema.parse(1)).not.toThrow()
+      expect(() => timeInSecondsSchema.parse(1.5)).not.toThrow() // decimals are valid
+      expect(() => timeInSecondsSchema.parse(60)).not.toThrow()
+      expect(() => timeInSecondsSchema.parse(3600)).not.toThrow() // 1 hour
+      expect(() => timeInSecondsSchema.parse(0.001)).not.toThrow() // millisecond precision
+    })
+
+    test("should reject invalid time values", () => {
+      // Negative values
+      expect(() => timeInSecondsSchema.parse(-1)).toThrow(ZodError)
+      expect(() => timeInSecondsSchema.parse(-0.5)).toThrow(ZodError)
+    })
+  })
+
+  describe("extractFrameSyncSchema", () => {
+    test("should accept valid frame extraction data", () => {
+      const validData = {
+        fileId: "file123",
+        timeInSeconds: 1.5,
+      }
+      expect(() => extractFrameSyncSchema.parse(validData)).not.toThrow()
+
+      const validDataAtZero = {
+        fileId: "video-abc-xyz",
+        timeInSeconds: 0,
+      }
+      expect(() => extractFrameSyncSchema.parse(validDataAtZero)).not.toThrow()
+
+      const validDataLongTime = {
+        fileId: "file123",
+        timeInSeconds: 3600, // 1 hour
+      }
+      expect(() =>
+        extractFrameSyncSchema.parse(validDataLongTime),
+      ).not.toThrow()
+    })
+
+    test("should reject invalid frame extraction data", () => {
+      // Missing fileId
+      const missingFileId = {
+        timeInSeconds: 1.5,
+      }
+      expect(() => extractFrameSyncSchema.parse(missingFileId)).toThrow(
+        ZodError,
+      )
+
+      // Empty fileId
+      const emptyFileId = {
+        fileId: "",
+        timeInSeconds: 1.5,
+      }
+      expect(() => extractFrameSyncSchema.parse(emptyFileId)).toThrow(ZodError)
+
+      // Missing timeInSeconds
+      const missingTime = {
+        fileId: "file123",
+      }
+      expect(() => extractFrameSyncSchema.parse(missingTime)).toThrow(ZodError)
+
+      // Negative timeInSeconds
+      const negativeTime = {
+        fileId: "file123",
+        timeInSeconds: -1,
+      }
+      expect(() => extractFrameSyncSchema.parse(negativeTime)).toThrow(ZodError)
+
+      // timeInSeconds is not a number
+      const stringTime = {
+        fileId: "file123",
+        timeInSeconds: "1.5",
+      }
+      expect(() => extractFrameSyncSchema.parse(stringTime)).toThrow(ZodError)
     })
   })
 })

@@ -244,6 +244,22 @@ export const startMintingSchema = z.object({
 })
 
 /**
+ * Schema for time in seconds for frame extraction
+ * Must be a non-negative number
+ */
+export const timeInSecondsSchema = z
+  .number()
+  .nonnegative("Time must be 0 or greater")
+
+/**
+ * Composite schema for extracting a frame from a video
+ */
+export const extractFrameSyncSchema = z.object({
+  fileId: fileIdSchema,
+  timeInSeconds: timeInSecondsSchema,
+})
+
+/**
  * Type exports for convenience
  */
 export type CreateContractInput = z.infer<typeof createContractSchema>
@@ -253,3 +269,4 @@ export type MetadataAttributeInput = z.infer<typeof metadataAttributeSchema>
 export type PrepareNewFileInput = z.infer<typeof prepareNewFileSchema>
 export type CompleteUploadInput = z.infer<typeof completeUploadSchema>
 export type StartMintingInput = z.infer<typeof startMintingSchema>
+export type ExtractFrameSyncInput = z.infer<typeof extractFrameSyncSchema>

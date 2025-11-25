@@ -146,7 +146,7 @@ Core SDK package with full API client functionality.
 - Device ID management
 - Debug mode
 
-📦 **Size:** ESM: 39.77 KB (gzipped: 9.04 KB), CJS: 42.82 KB (gzipped: 9.63 KB)
+📦 **Size:** ESM: 40.52 KB (gzipped: 9.19 KB), CJS: 43.67 KB (gzipped: 9.79 KB)
 
 ### [@uranium/react](./packages/react)
 
