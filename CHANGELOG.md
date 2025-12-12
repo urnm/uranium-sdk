@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2025-12-12
+
+### Fixed
+- Use `bunx tsc` instead of `./node_modules/.bin/tsc` for CI compatibility
+
 ## [0.2.1] - 2025-12-12
 
 ### Security
@@ -60,5 +65,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved type exports from @uranium/types to fix build issues
 - Updated test suite (938 passing tests)
 
+[0.2.2]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.2
 [0.2.1]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.1
 [0.2.0]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.0

@@ -1,6 +1,6 @@
 {
   "name": "@uranium/types",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "type": "module",
   "description": "TypeScript type definitions for Uranium SDK",
   "main": "./dist/index.js",
@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "build": "bun run clean && bun run build:types && bun run build:js",
-    "build:types": "./node_modules/.bin/tsc --emitDeclarationOnly",
+    "build:types": "bunx tsc --emitDeclarationOnly",
     "build:js": "bun run build.ts",
     "dev": "bun --watch ./src/index.ts",
     "lint": "biome check . --diagnostic-level=error",
