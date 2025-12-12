@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-12-12
+
+### Security
+- **@uranium/react** - Updated React 19 peer dependencies to exclude vulnerable versions
+  - Addresses DoS and source code exposure in React Server Components
+  - See: https://react.dev/blog/2025/12/11/denial-of-service-and-source-code-exposure-in-react-server-components
+  - Safe versions: `>=19.0.3 <19.1.0`, `>=19.1.4 <19.2.0`, `>=19.2.3 <20.0.0`
+
 ## [0.2.0] - 2025-11-25
 
 ### Added
@@ -52,4 +60,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved type exports from @uranium/types to fix build issues
 - Updated test suite (938 passing tests)
 
+[0.2.1]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.1
 [0.2.0]: https://github.com/urnm/uranium-sdk/releases/tag/v0.2.0
